@@ -26,6 +26,24 @@ export class AxiosHttpClient implements IHttpClient {
 
       return config;
     });
+
+    // Interceptor global de Responses (Sessão Expirada)
+    this.instance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Limpa tokens
+          localStorage.removeItem(LocalStorageKeys.ADMIN_TOKEN);
+          localStorage.removeItem(LocalStorageKeys.ADMIN_TOKEN_TYPE);
+          
+          // Redireciona para o login (reload forcado garante estado zerado da aplicacao)
+          if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   async post<T = any>(url: string, body?: any, headers?: any): Promise<IHttpResponse<T>> {

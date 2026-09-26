@@ -1,50 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { PlatformAdminService } from '../../../services/PlatformAdminService';
 import { AxiosHttpClient } from '../../../infrastructure/http/AxiosHttpClient';
-import { Users, Plus, Shield, Power } from 'lucide-react';
+import { Users, Plus, Shield, Power, Loader2 } from 'lucide-react';
+import { CreateAdminModal } from './modals/CreateAdminModal';
+
+const service = new PlatformAdminService(new AxiosHttpClient());
 
 export default function AdminsTab() {
   const { t } = useTranslation();
-  const [admins, setAdmins] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [service] = useState(() => new PlatformAdminService(new AxiosHttpClient()));
+  const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    loadAdmins();
-  }, []);
-
-  const loadAdmins = async () => {
-    setLoading(true);
-    const result = await service.getAllAdmins();
-    if (result.success) {
-      setAdmins(result.data || []);
+  const { data: admins = [], isLoading } = useQuery({
+    queryKey: ['platform-admins'],
+    queryFn: async () => {
+      const res = await service.getAllAdmins();
+      if (!res.success) throw new Error(res.message);
+      return res.data || [];
     }
-    setLoading(false);
-  };
+  });
 
-  const handleToggleStatus = async (id: string, currentStatus: boolean) => {
-    const result = await service.toggleStatus(id, !currentStatus);
-    if (result.success) {
-      loadAdmins();
-    } else {
-      alert(result.message);
-    }
+  const toggleMutation = useMutation({
+    mutationFn: ({ id, currentStatus }: { id: string; currentStatus: boolean }) => 
+      service.toggleStatus(id, !currentStatus),
+    onSuccess: (result) => {
+      if (result.success) {
+        toast.success('Status atualizado');
+        queryClient.invalidateQueries({ queryKey: ['platform-admins'] });
+      } else {
+        toast.error(result.message);
+      }
+    },
+    onError: () => toast.error('Erro ao atualizar status')
+  });
+
+  const handleToggleStatus = (id: string, currentStatus: boolean) => {
+    toggleMutation.mutate({ id, currentStatus });
   };
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium text-gray-900">{t('accessControl.tabs.admins')}</h3>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
+        >
           <Plus className="w-4 h-4 mr-2" />
           {t('accessControl.admins.newAdmin')}
         </button>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-gray-500">{t('accessControl.admins.loading')}</div>
+        {isLoading ? (
+          <div className="flex justify-center items-center p-12 text-gray-500">
+            <Loader2 className="w-6 h-6 animate-spin mr-2" />
+            {t('accessControl.admins.loading')}
+          </div>
         ) : (
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -56,7 +71,7 @@ export default function AdminsTab() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {admins.map((admin) => (
+              {admins.map((admin: any) => (
                 <tr key={admin.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -83,7 +98,8 @@ export default function AdminsTab() {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button 
                       onClick={() => handleToggleStatus(admin.id, admin.isActive)}
-                      className={`p-2 rounded-lg transition-colors ${admin.isActive ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50'}`}
+                      disabled={toggleMutation.isPending}
+                      className={`p-2 rounded-lg transition-colors disabled:opacity-50 ${admin.isActive ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50'}`}
                       title={admin.isActive ? t('accessControl.admins.tooltips.block') : t('accessControl.admins.tooltips.unblock')}
                     >
                       <Power className="w-4 h-4" />
@@ -95,6 +111,11 @@ export default function AdminsTab() {
           </table>
         )}
       </div>
+
+      <CreateAdminModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
