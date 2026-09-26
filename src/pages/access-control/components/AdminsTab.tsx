@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { showToast } from '../../../core/utils/toastUtils';
 import { PlatformAdminService } from '../../../services/PlatformAdminService';
 import { AxiosHttpClient } from '../../../infrastructure/http/AxiosHttpClient';
 import { Users, Plus, Shield, Power, Loader2 } from 'lucide-react';
 import { CreateAdminModal } from './modals/CreateAdminModal';
+import ConfirmModal from '../../components/modals/ConfirmModal';
 
 const service = new PlatformAdminService(new AxiosHttpClient());
 
@@ -13,6 +14,11 @@ export default function AdminsTab() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, id: string, currentStatus: boolean}>({
+    isOpen: false,
+    id: '',
+    currentStatus: false
+  });
 
   const { data: admins = [], isLoading } = useQuery({
     queryKey: ['platform-admins'],
@@ -24,21 +30,25 @@ export default function AdminsTab() {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: ({ id, currentStatus }: { id: string; currentStatus: boolean }) => 
-      service.toggleStatus(id, !currentStatus),
+    mutationFn: (id: string) => service.toggleStatus(id), // Removed isActive payload
     onSuccess: (result) => {
       if (result.success) {
-        toast.success('Status atualizado');
+        showToast.success('Status atualizado com sucesso', 'Ação Concluída');
         queryClient.invalidateQueries({ queryKey: ['platform-admins'] });
       } else {
-        toast.error(result.message);
+        showToast.error(result.message || 'Erro', 'Falha');
       }
     },
-    onError: () => toast.error('Erro ao atualizar status')
+    onError: () => showToast.error('Erro ao atualizar status', 'Falha')
   });
 
-  const handleToggleStatus = (id: string, currentStatus: boolean) => {
-    toggleMutation.mutate({ id, currentStatus });
+  const openToggleConfirm = (id: string, currentStatus: boolean) => {
+    setConfirmModal({ isOpen: true, id, currentStatus });
+  };
+
+  const handleToggleConfirm = () => {
+    toggleMutation.mutate(confirmModal.id);
+    setConfirmModal({ ...confirmModal, isOpen: false });
   };
 
   return (
@@ -97,7 +107,7 @@ export default function AdminsTab() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button 
-                      onClick={() => handleToggleStatus(admin.id, admin.isActive)}
+                      onClick={() => openToggleConfirm(admin.id, admin.isActive)}
                       disabled={toggleMutation.isPending}
                       className={`p-2 rounded-lg transition-colors disabled:opacity-50 ${admin.isActive ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50'}`}
                       title={admin.isActive ? t('accessControl.admins.tooltips.block') : t('accessControl.admins.tooltips.unblock')}
@@ -115,6 +125,16 @@ export default function AdminsTab() {
       <CreateAdminModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.currentStatus ? "Bloquear Acesso" : "Desbloquear Acesso"}
+        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'bloquear' : 'desbloquear'} este administrador? ${confirmModal.currentStatus ? 'Ele perderá acesso imediato ao painel.' : ''}`}
+        type={confirmModal.currentStatus ? "warning" : "info"}
+        confirmText={confirmModal.currentStatus ? "Bloquear" : "Desbloquear"}
+        onConfirm={handleToggleConfirm}
+        onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
       />
     </div>
   );

@@ -5,11 +5,18 @@ import type { TenantDTO } from '../core/interfaces/TenantDTO';
 import { TenantService } from '../services/TenantService';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import CreateTenantModal from '../components/modals/CreateTenantModal';
+import ConfirmModal from '../components/modals/ConfirmModal';
 import type { CreateTenantRequest } from '../core/interfaces/CreateTenantRequest';
-import toast from 'react-hot-toast';
+import { showToast } from '../core/utils/toastUtils';
 
 export default function Tenants() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, tenantId: string, currentStatus: boolean}>({
+    isOpen: false,
+    tenantId: '',
+    currentStatus: false
+  });
+  
   const queryClient = useQueryClient();
   const tenantService = useMemo(() => new TenantService(new AxiosHttpClient()), []);
 
@@ -26,15 +33,15 @@ export default function Tenants() {
     mutationFn: (data: CreateTenantRequest) => tenantService.createTenant(data),
     onSuccess: (response) => {
       if (response.success) {
-        toast.success('Inquilino criado com sucesso!');
+        showToast.success('Inquilino criado com sucesso!');
         setIsModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ['tenants'] });
       } else {
-        toast.error(response.message || 'Erro ao criar inquilino');
+        showToast.error(response.message || 'Erro ao criar inquilino');
       }
     },
     onError: (err: any) => {
-      toast.error(err.message || 'Erro fatal');
+      showToast.error(err.message || 'Erro fatal');
     }
   });
 
@@ -42,14 +49,14 @@ export default function Tenants() {
     mutationFn: (id: string) => tenantService.toggleStatus(id),
     onSuccess: (response) => {
       if (response.success) {
-        toast.success(response.message || 'Status alterado com sucesso');
+        showToast.success(response.message || 'Status alterado com sucesso', 'Ação Concluída');
         queryClient.invalidateQueries({ queryKey: ['tenants'] });
       } else {
-        toast.error(response.message || 'Erro ao alterar status');
+        showToast.error(response.message || 'Erro ao alterar status', 'Falha');
       }
     },
     onError: (err: any) => {
-      toast.error(err.message || 'Erro de rede ao alterar status');
+      showToast.error(err.message || 'Erro de rede ao alterar status');
     }
   });
 
@@ -57,10 +64,13 @@ export default function Tenants() {
     createMutation.mutate(data);
   };
 
-  const handleToggleStatus = (id: string, currentStatus: boolean) => {
-    if (window.confirm(`Tem certeza que deseja ${currentStatus ? 'bloquear' : 'desbloquear'} este inquilino?`)) {
-      toggleStatusMutation.mutate(id);
-    }
+  const openToggleConfirm = (id: string, currentStatus: boolean) => {
+    setConfirmModal({ isOpen: true, tenantId: id, currentStatus });
+  };
+
+  const handleToggleConfirm = () => {
+    toggleStatusMutation.mutate(confirmModal.tenantId);
+    setConfirmModal({ isOpen: false, tenantId: '', currentStatus: false });
   };
 
   return (
@@ -185,7 +195,7 @@ export default function Tenants() {
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => handleToggleStatus(tenant.id, tenant.isActive)}
+                          onClick={() => openToggleConfirm(tenant.id, tenant.isActive)}
                           disabled={toggleStatusMutation.isPending}
                           className={`transition-colors ${tenant.isActive ? 'text-gray-400 hover:text-red-600' : 'text-red-500 hover:text-green-600'}`} 
                           title={tenant.isActive ? "Suspender Conta" : "Ativar Conta"}
@@ -216,6 +226,16 @@ export default function Tenants() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateTenant}
+      />
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.currentStatus ? "Suspender Inquilino" : "Ativar Inquilino"}
+        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuários vinculados perderão o acesso.' : ''}`}
+        type={confirmModal.currentStatus ? "warning" : "info"}
+        confirmText={confirmModal.currentStatus ? "Suspender" : "Ativar"}
+        onConfirm={handleToggleConfirm}
+        onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
       />
     </div>
   );
