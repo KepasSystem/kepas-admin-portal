@@ -24,12 +24,8 @@ export class PlatformAdminService {
     return { success: false, message: response.body?.message || 'Falha ao criar admin' };
   }
 
-  async toggleStatus(id: string, isActive: boolean): Promise<{ success: boolean; message?: string }> {
-    
-    const response = await this.httpClient.patch<any>(`/api/v1/platformadmins/${id}/toggle-status`, isActive, {
-      'Content-Type': 'application/json'
-    });
-    
+  async toggleStatus(id: string): Promise<{ success: boolean; message?: string }> {
+    const response = await this.httpClient.patch<any>(`/api/v1/platformadmins/${id}/toggle-status`, {});
     if (response.isSuccess && response.body?.success) {
       return { success: true, message: response.body.message };
     }
