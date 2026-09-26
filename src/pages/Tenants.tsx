@@ -19,7 +19,7 @@ export default function Tenants() {
   });
   
   const queryClient = useQueryClient();
-  const tenantService = useMemo(() => DI.getTenantService(), []);
+  const tenantService = useMemo(() => DI.resolve<any>('ITenantService'), []);
 
   const { data: tenants = [], isLoading, error } = useQuery({
     queryKey: ['tenants'],

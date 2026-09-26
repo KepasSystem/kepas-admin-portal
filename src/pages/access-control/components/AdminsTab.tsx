@@ -9,7 +9,7 @@ import { Users, Plus, Shield, Power, Loader2 } from 'lucide-react';
 import { CreateAdminModal } from './modals/CreateAdminModal';
 import ConfirmModal from '../../../components/modals/ConfirmModal';
 
-const service = DI.getPlatformAdminService();
+const service = DI.resolve<any>('IPlatformAdminService');
 
 export default function AdminsTab() {
   const { t } = useTranslation();

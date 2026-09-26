@@ -10,7 +10,7 @@ import CreateServiceAccountModal from '../components/modals/CreateServiceAccount
 export default function ServiceAccounts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
-  const serviceAccountService = useMemo(() => DI.getServiceAccountService(), []);
+  const serviceAccountService = useMemo(() => DI.resolve<any>('IServiceAccountService'), []);
 
   const { data: accounts = [], isLoading, error } = useQuery({
     queryKey: ['serviceAccounts'],

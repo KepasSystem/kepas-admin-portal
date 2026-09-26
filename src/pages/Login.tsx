@@ -14,7 +14,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   // Injetando dependências manualmente (poderia usar context ou hooks customizados)
-  const authService = useMemo(() => DI.getAuthService(), []);
+  const authService = useMemo(() => DI.resolve<any>('IAuthService'), []);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
