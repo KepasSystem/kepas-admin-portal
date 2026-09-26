@@ -1,5 +1,4 @@
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
-import { ApiEndpoints } from '../core/constants/ApiEndpoints';
 import type { ServiceAccountDTO } from '../core/interfaces/ServiceAccountDTO';
 
 export class ServiceAccountService {
