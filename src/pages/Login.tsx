@@ -1,26 +1,26 @@
-import { useAppTranslation } from '../core/i18n/useAppTranslation';
+﻿import { useAppTranslation } from '../core/i18n/useAppTranslation';
 import { TKeys } from '../core/i18n/TranslationKeys';
 import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
 import { LocalStorageKeys } from '../core/enums/LocalStorageKeys';
 import Cookies from 'js-cookie';
 
 export default function Login() {
-  const { t, changeLanguage } = useAppTranslation();
+  const { t, changeLanguage, currentLanguage } = useAppTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Injetando dependências manualmente (poderia usar context ou hooks customizados)
+  // Injetando dependÃªncias manualmente (poderia usar context ou hooks customizados)
   const authService = useMemo(() => DI.resolve<any>('IAuthService'), []);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
-    i18n.changeLanguage(lang);
+    changeLanguage(lang);
     localStorage.setItem(LocalStorageKeys.LANGUAGE, lang);
   };
 
@@ -41,7 +41,7 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err: any) {
       if (!err.response && err.message === 'Network Error') {
-        setError('Não foi possível conectar ao servidor. Aguarde um momento e tente novamente.');
+        setError('NÃ£o foi possÃ­vel conectar ao servidor. Aguarde um momento e tente novamente.');
       } else {
         setError(err.message || 'Erro ao autenticar. Tente novamente.');
       }
@@ -56,11 +56,11 @@ export default function Login() {
       {/* Topbar com seletor de idioma */}
       <div className="w-full flex justify-end">
         <select 
-          value={i18n.language} 
+          value={currentLanguage} 
           onChange={handleLanguageChange}
           className="px-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
         >
-          <option value="pt-BR">Português (BR)</option>
+          <option value="pt-BR">PortuguÃªs (BR)</option>
           <option value="en-US">English (US)</option>
         </select>
       </div>
@@ -97,7 +97,7 @@ export default function Login() {
               type="password" 
               required
               className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -114,7 +114,7 @@ export default function Login() {
 
         <div className="mt-6 text-center">
           <a href="#" className="text-sm text-blue-600 hover:text-blue-500 font-medium">
-            Recuperação via 2FA ou WhatsApp
+            RecuperaÃ§Ã£o via 2FA ou WhatsApp
           </a>
         </div>
         </div>
@@ -122,4 +122,6 @@ export default function Login() {
     </div>
   );
 }
+
+
 

@@ -1,4 +1,4 @@
-﻿import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
+import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import type { ServiceAccountDTO } from '../core/interfaces/ServiceAccountDTO';
 
 export class ServiceAccountService {
@@ -6,7 +6,7 @@ export class ServiceAccountService {
 
   async getAllAccounts(search: string = '', page: number = 1, limit: number = 10): Promise<{ success: boolean; data?: { items: ServiceAccountDTO[], totalCount: number, pageNumber: number, pageSize: number }; message?: string }> {
     const query = new URLSearchParams({ search, page: page.toString(), limit: limit.toString() }).toString();
-    const response = await this.httpClient.get<any>(/api/v1/serviceaccounts?${query});
+    const response = await this.httpClient.get<any>(`/api/v1/serviceaccounts?${query}`);
     if (response.isSuccess && response.body?.success) {
       return { success: true, data: response.body.data };
     }
@@ -21,4 +21,5 @@ export class ServiceAccountService {
     return { success: false, message: response.body?.message || 'Falha ao criar conta de serviÃ§o' };
   }
 }
+
 
