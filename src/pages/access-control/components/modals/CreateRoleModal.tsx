@@ -10,7 +10,7 @@ import { Modal } from '../../../../components/ui/Modal';
 import { Button } from '../../../../components/ui/Button';
 import { Input } from '../../../../components/ui/Input';
 
-const service = DI.getPlatformRoleService();
+const service = DI.resolve<any>('IPlatformRoleService');
 
 const schema = z.object({
   name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),

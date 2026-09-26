@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { Shield, Plus, Trash2, Loader2 } from 'lucide-react';
 import { CreateRoleModal } from './modals/CreateRoleModal';
 
-const service = DI.getPlatformRoleService();
+const service = DI.resolve<any>('IPlatformRoleService');
 
 export default function RolesTab() {
   const { t } = useTranslation();

@@ -29,7 +29,7 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
   const { data: serviceAccounts = [], isLoading: loadingAccounts } = useQuery({
     queryKey: ['serviceAccounts'],
     queryFn: async () => {
-      const service = DI.getServiceAccountService();
+      const service = DI.resolve<any>('IServiceAccountService');
       const response = await service.getAllAccounts();
       if (!response.success) throw new Error(response.message);
       return response.data || [];

@@ -21,7 +21,7 @@ export default function Dashboard() {
   }, []);
 
   const fetchKpis = async () => {
-    const http = DI.getHttpClient();
+    const http = DI.resolve<any>('IHttpClient');
     try {
       const res = await http.get<any>(`/api/v1/system-analytics/kpis`);
       if (res.isSuccess && res.body?.data) {

@@ -11,7 +11,7 @@ export default function Subscriptions() {
   const { data: modules = [], isLoading: isLoadingModules } = useQuery({
     queryKey: ['subscriptions', 'modules'],
     queryFn: async () => {
-      const http = DI.getHttpClient();
+      const http = DI.resolve<any>('IHttpClient');
       const res = await http.get<any>(`/api/v1/subscriptions/modules`);
       if (!res.isSuccess) throw new Error(res.body?.message || 'Error fetching modules');
       return res.body?.data || [];
@@ -21,7 +21,7 @@ export default function Subscriptions() {
   const { data: plans = [], isLoading: isLoadingPlans } = useQuery({
     queryKey: ['subscriptions', 'plans'],
     queryFn: async () => {
-      const http = DI.getHttpClient();
+      const http = DI.resolve<any>('IHttpClient');
       const res = await http.get<any>(`/api/v1/subscriptions/plans`);
       if (!res.isSuccess) throw new Error(res.body?.message || 'Error fetching plans');
       return res.body?.data || [];
@@ -32,7 +32,7 @@ export default function Subscriptions() {
   const { data: kpis } = useQuery({
     queryKey: ['kpis'],
     queryFn: async () => {
-      const http = DI.getHttpClient();
+      const http = DI.resolve<any>('IHttpClient');
       const res = await http.get<any>(`/api/v1/system-analytics/kpis`);
       return res.body?.data || { mrr: 0, activeSubscriptions: 0 };
     }

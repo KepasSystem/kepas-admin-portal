@@ -11,7 +11,7 @@ export default function Settings() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [wppStatus, setWppStatus] = useState('disconnected'); // disconnected, loading, connected
 
-  const settingsService = useMemo(() => DI.getSystemSettingsService(), []);
+  const settingsService = useMemo(() => DI.resolve<any>('ISystemSettingsService'), []);
 
   useEffect(() => {
     loadSettings();
