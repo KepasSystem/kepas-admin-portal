@@ -1,3 +1,4 @@
+import { DI } from '../../../../core/di/DependencyInjection';
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,10 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { Modal } from '../../../../components/ui/Modal';
 import { Button } from '../../../../components/ui/Button';
 import { Input } from '../../../../components/ui/Input';
-import { PlatformRoleService } from '../../../../services/PlatformRoleService';
-import { AxiosHttpClient } from '../../../../infrastructure/http/AxiosHttpClient';
 
-const service = new PlatformRoleService(new AxiosHttpClient());
+const service = DI.getPlatformRoleService();
 
 const schema = z.object({
   name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),

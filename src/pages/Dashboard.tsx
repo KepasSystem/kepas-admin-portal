@@ -1,3 +1,4 @@
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Users, Briefcase, TrendingUp } from 'lucide-react';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
@@ -20,7 +21,7 @@ export default function Dashboard() {
   }, []);
 
   const fetchKpis = async () => {
-    const http = new AxiosHttpClient();
+    const http = DI.getHttpClient();
     try {
       const res = await http.get<any>(`/api/v1/system-analytics/kpis`);
       if (res.isSuccess && res.body?.data) {

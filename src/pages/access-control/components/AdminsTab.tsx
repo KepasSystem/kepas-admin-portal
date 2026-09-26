@@ -1,3 +1,4 @@
+import { DI } from '../../../core/di/DependencyInjection';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -8,7 +9,7 @@ import { Users, Plus, Shield, Power, Loader2 } from 'lucide-react';
 import { CreateAdminModal } from './modals/CreateAdminModal';
 import ConfirmModal from '../../../components/modals/ConfirmModal';
 
-const service = new PlatformAdminService(new AxiosHttpClient());
+const service = DI.getPlatformAdminService();
 
 export default function AdminsTab() {
   const { t } = useTranslation();

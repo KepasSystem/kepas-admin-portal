@@ -1,7 +1,6 @@
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Save, Mail, MessageCircle, QrCode, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { SystemSettingsService } from '../services/SystemSettingsService';
-import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 
 export default function Settings() {
   const [smtpEmail, setSmtpEmail] = useState('');
@@ -12,7 +11,7 @@ export default function Settings() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [wppStatus, setWppStatus] = useState('disconnected'); // disconnected, loading, connected
 
-  const settingsService = useMemo(() => new SystemSettingsService(new AxiosHttpClient()), []);
+  const settingsService = useMemo(() => DI.getSystemSettingsService(), []);
 
   useEffect(() => {
     loadSettings();

@@ -1,3 +1,4 @@
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, Edit, Eye, Building, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ import CreateServiceAccountModal from '../components/modals/CreateServiceAccount
 export default function ServiceAccounts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
-  const serviceAccountService = useMemo(() => new ServiceAccountService(new AxiosHttpClient()), []);
+  const serviceAccountService = useMemo(() => DI.getServiceAccountService(), []);
 
   const { data: accounts = [], isLoading, error } = useQuery({
     queryKey: ['serviceAccounts'],
