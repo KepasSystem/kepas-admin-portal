@@ -30,6 +30,18 @@ export class TenantService {
 
     return { success: false, message: response.body?.message || 'Falha ao criar inquilino' };
   }
+
+  async toggleStatus(id: string): Promise<{ success: boolean; message?: string }> {
+    const response = await this.httpClient.patch<any>(
+      `${ApiEndpoints.TENANTS}/${id}/toggle-status`,
+      {}
+    );
+
+    if (response.isSuccess && response.body?.success) {
+      return { success: true, message: response.body.message };
+    }
+    return { success: false, message: response.body?.message || 'Falha ao alterar status' };
+  }
 }
 
 

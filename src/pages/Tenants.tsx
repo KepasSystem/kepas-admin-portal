@@ -1,57 +1,70 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, AlertCircle } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, CheckCircle, AlertCircle } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { TenantDTO } from '../core/interfaces/TenantDTO';
 import { TenantService } from '../services/TenantService';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import CreateTenantModal from '../components/modals/CreateTenantModal';
 import type { CreateTenantRequest } from '../core/interfaces/CreateTenantRequest';
+import toast from 'react-hot-toast';
 
 export default function Tenants() {
-  const [tenants, setTenants] = useState<TenantDTO[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const queryClient = useQueryClient();
   const tenantService = useMemo(() => new TenantService(new AxiosHttpClient()), []);
 
-  const fetchTenants = async () => {
-    setLoading(true);
-    setError('');
-    try {
+  const { data: tenants = [], isLoading, error } = useQuery({
+    queryKey: ['tenants'],
+    queryFn: async () => {
       const response = await tenantService.getAllTenants();
-      if (response.success && response.data) {
-        setTenants(response.data);
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (err: any) {
-      setError(err.message || 'Erro de conexão.');
-    } finally {
-      setLoading(false);
+      if (!response.success) throw new Error(response.message);
+      return response.data || [];
     }
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: CreateTenantRequest) => tenantService.createTenant(data),
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success('Inquilino criado com sucesso!');
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ['tenants'] });
+      } else {
+        toast.error(response.message || 'Erro ao criar inquilino');
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Erro fatal');
+    }
+  });
+
+  const toggleStatusMutation = useMutation({
+    mutationFn: (id: string) => tenantService.toggleStatus(id),
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success(response.message || 'Status alterado com sucesso');
+        queryClient.invalidateQueries({ queryKey: ['tenants'] });
+      } else {
+        toast.error(response.message || 'Erro ao alterar status');
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Erro de rede ao alterar status');
+    }
+  });
+
+  const handleCreateTenant = (data: CreateTenantRequest) => {
+    createMutation.mutate(data);
   };
 
-  useEffect(() => {
-    fetchTenants();
-  }, [tenantService]);
-
-  const handleCreateTenant = async (data: CreateTenantRequest) => {
-    try {
-      const response = await tenantService.createTenant(data);
-      if (!response.success) {
-        alert(response.message);
-        return;
-      }
-      alert("Inquilino criado com sucesso!");
-      fetchTenants(); // Recarrega a tabela
-    } catch (err: any) {
-      alert("Erro fatal: " + err.message);
+  const handleToggleStatus = (id: string, currentStatus: boolean) => {
+    if (window.confirm(`Tem certeza que deseja ${currentStatus ? 'bloquear' : 'desbloquear'} este inquilino?`)) {
+      toggleStatusMutation.mutate(id);
     }
   };
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header da View */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Gestão de Clientes (Tenants)</h1>
@@ -70,14 +83,12 @@ export default function Tenants() {
       {error && (
         <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-lg flex items-center">
           <AlertCircle className="w-5 h-5 mr-2" />
-          {error}
+          {error instanceof Error ? error.message : 'Erro de conexão'}
         </div>
       )}
 
-      {/* Tabela e Filtros */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex-1 flex flex-col">
         
-        {/* Barra de Busca e Filtros */}
         <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
           <div className="relative w-full sm:w-96">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -98,7 +109,6 @@ export default function Tenants() {
           </div>
         </div>
 
-        {/* Corpo da Tabela */}
         <div className="overflow-x-auto flex-1">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -121,7 +131,7 @@ export default function Tenants() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {loading ? (
+              {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                     Carregando inquilinos...
@@ -174,8 +184,13 @@ export default function Tenants() {
                         <button className="text-gray-400 hover:text-green-600 transition-colors" title="Editar Dados">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="text-gray-400 hover:text-red-600 transition-colors" title="Suspender Conta">
-                          <Ban className="w-4 h-4" />
+                        <button 
+                          onClick={() => handleToggleStatus(tenant.id, tenant.isActive)}
+                          disabled={toggleStatusMutation.isPending}
+                          className={`transition-colors ${tenant.isActive ? 'text-gray-400 hover:text-red-600' : 'text-red-500 hover:text-green-600'}`} 
+                          title={tenant.isActive ? "Suspender Conta" : "Ativar Conta"}
+                        >
+                          {tenant.isActive ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                         </button>
                       </div>
                     </td>
@@ -186,10 +201,9 @@ export default function Tenants() {
           </table>
         </div>
         
-        {/* Footer / Paginação */}
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Mostrando <span className="font-medium">1</span> a <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{tenants.length}</span> inquilinos
+            Mostrando <span className="font-medium">{tenants.length > 0 ? 1 : 0}</span> a <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{tenants.length}</span> inquilinos
           </div>
           <div className="flex space-x-2">
             <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-gray-50 cursor-not-allowed">Anterior</button>
