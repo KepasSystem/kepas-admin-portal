@@ -1,3 +1,5 @@
+import { useAppTranslation } from '../../../core/i18n/useAppTranslation';
+import { TKeys } from '../../../core/i18n/TranslationKeys';
 import { DI } from '../../../core/di/DependencyInjection';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +14,7 @@ import ConfirmModal from '../../../components/modals/ConfirmModal';
 const service = DI.resolve<any>('IPlatformAdminService');
 
 export default function AdminsTab() {
-  const { t } = useTranslation();
+  const { t } = useAppTranslation();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, id: string, currentStatus: boolean}>({
@@ -55,7 +57,7 @@ export default function AdminsTab() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-900">{t('accessControl.tabs.admins')}</h3>
+        <h3 className="text-lg font-medium text-gray-900">{t(TKeys.AccessControl.Tabs.Admins)}</h3>
         <button 
           onClick={() => setIsModalOpen(true)}
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"

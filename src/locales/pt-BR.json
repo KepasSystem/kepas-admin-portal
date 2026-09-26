@@ -28,7 +28,39 @@
   "common": {
     "save": "Salvar",
     "cancel": "Cancelar",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "search": "Buscar...",
+    "actions": "Ações",
+    "status": "Status",
+    "comingSoon": "Em Breve!",
+    "showingOf": "Mostrando {{count}} de {{total}}"
+  },
+  "tenants": {
+    "title": "Inquilinos (Tenants)",
+    "subtitle": "Gerencie os seus clientes B2B.",
+    "newTenant": "Novo Inquilino",
+    "columns": {
+      "company": "Empresa / Contato",
+      "subdomain": "Subdomínio",
+      "currentPlan": "Plano Atual"
+    },
+    "emptyState": "Nenhum inquilino encontrado.",
+    "loading": "Carregando inquilinos..."
+  },
+  "serviceAccounts": {
+    "title": "Contas de Serviço",
+    "subtitle": "Gestão de proprietários corporativos.",
+    "newAccount": "Nova Conta de Serviço",
+    "columns": {
+      "owner": "Proprietário",
+      "tenantsCount": "Tenants",
+      "subscriptionsCount": "Assinaturas",
+      "created": "Criado em"
+    },
+    "emptyState": "Nenhuma conta encontrada.",
+    "loading": "Carregando contas de serviço..."
   },
   "accessControl": {
     "tabs": {

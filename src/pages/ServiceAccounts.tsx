@@ -1,3 +1,5 @@
+import { useAppTranslation } from '../core/i18n/useAppTranslation';
+import { TKeys } from '../core/i18n/TranslationKeys';
 ﻿import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, Edit, Eye, Building, Users } from 'lucide-react';
@@ -8,6 +10,7 @@ import { showToast } from '../core/utils/toastUtils';
 import CreateServiceAccountModal from '../components/modals/CreateServiceAccountModal';
 
 export default function ServiceAccounts() {
+  const { t } = useAppTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const serviceAccountService = useMemo(() => DI.resolve<any>('IServiceAccountService'), []);
@@ -49,8 +52,8 @@ export default function ServiceAccounts() {
     <div className="flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Contas de ServiÃ§o</h1>
-          <p className="text-sm text-gray-500 mt-1">Gerencie os clientes globais (corporaÃ§Ãµes) que detÃªm Inquilinos na KEPAS.</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t(TKeys.ServiceAccounts.Title)}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t(TKeys.ServiceAccounts.Subtitle)}</p>
         </div>
         
         <button 
@@ -58,7 +61,7 @@ export default function ServiceAccounts() {
           className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
         >
           <Plus className="w-5 h-5 mr-2" />
-          Nova Conta
+          {t(TKeys.ServiceAccounts.NewAccount)}
         </button>
       </div>
 
@@ -70,7 +73,7 @@ export default function ServiceAccounts() {
             </div>
             <input
               type="text"
-              placeholder="Buscar por nome ou email..."
+              placeholder={t(TKeys.Common.Search)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
               disabled
             />
@@ -81,24 +84,24 @@ export default function ServiceAccounts() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Conta Base</th>
-                <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Inquilinos Vinculados</th>
-                <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Assinaturas Ativas</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Criada em</th>
-                <th scope="col" className="relative px-6 py-3"><span className="sr-only">AÃ§Ãµes</span></th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(TKeys.ServiceAccounts.Columns.Owner)}</th>
+                <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(TKeys.ServiceAccounts.Columns.TenantsCount)}</th>
+                <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(TKeys.ServiceAccounts.Columns.SubscriptionsCount)}</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(TKeys.ServiceAccounts.Columns.Created)}</th>
+                <th scope="col" className="relative px-6 py-3"><span className="sr-only">{t(TKeys.Common.Actions)}</span></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
-                    Carregando contas de serviÃ§o...
+                    {t(TKeys.ServiceAccounts.Loading)}
                   </td>
                 </tr>
               ) : accounts.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
-                    Nenhuma conta encontrada.
+                    {t(TKeys.ServiceAccounts.EmptyState)}
                   </td>
                 </tr>
               ) : (
@@ -144,12 +147,12 @@ export default function ServiceAccounts() {
       </div>
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Mostrando <span className="font-medium">{accounts.length}</span> de <span className="font-medium">{data?.totalCount || 0}</span> contas
+            {t(TKeys.Common.ShowingOf)} <span className="font-medium">{accounts.length}</span> / <span className="font-medium">{data?.totalCount || 0}</span>
           </div>
           <div className="flex space-x-2">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Previous)}</button>
             <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
-            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Próxima</button>
+            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Next)}</button>
           </div>
         </div>
 

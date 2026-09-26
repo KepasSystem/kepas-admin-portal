@@ -1,19 +1,20 @@
+import { useAppTranslation } from '../../core/i18n/useAppTranslation';
+import { TKeys } from '../../core/i18n/TranslationKeys';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import RolesTab from './components/RolesTab';
 import AdminsTab from './components/AdminsTab';
 
 export default function AccessControl() {
-  const { t } = useTranslation();
+  const { t } = useAppTranslation();
   const [activeTab, setActiveTab] = useState<'roles' | 'admins'>('roles');
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('accessControl.title')}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t(TKeys.AccessControl.Title)}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {t('accessControl.subtitle')}
+            {t(TKeys.AccessControl.Subtitle)}
           </p>
         </div>
       </div>
@@ -29,7 +30,7 @@ export default function AccessControl() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('accessControl.tabs.roles')}
+              {t(TKeys.AccessControl.Tabs.Roles)}
             </button>
             <button
               onClick={() => setActiveTab('admins')}
@@ -39,7 +40,7 @@ export default function AccessControl() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {t('accessControl.tabs.admins')}
+              {t(TKeys.AccessControl.Tabs.Admins)}
             </button>
           </nav>
         </div>
