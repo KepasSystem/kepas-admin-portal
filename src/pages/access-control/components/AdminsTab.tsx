@@ -6,7 +6,7 @@ import { PlatformAdminService } from '../../../services/PlatformAdminService';
 import { AxiosHttpClient } from '../../../infrastructure/http/AxiosHttpClient';
 import { Users, Plus, Shield, Power, Loader2 } from 'lucide-react';
 import { CreateAdminModal } from './modals/CreateAdminModal';
-import ConfirmModal from '../../components/modals/ConfirmModal';
+import ConfirmModal from '../../../components/modals/ConfirmModal';
 
 const service = new PlatformAdminService(new AxiosHttpClient());
 
