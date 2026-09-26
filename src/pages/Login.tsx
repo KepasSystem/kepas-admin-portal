@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthService } from '../services/AuthService';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import { LocalStorageKeys } from '../core/enums/LocalStorageKeys';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
@@ -34,11 +35,15 @@ export default function Login() {
         throw new Error(response.message);
       }
 
-      localStorage.setItem(LocalStorageKeys.ADMIN_TOKEN, response.token!);
-      localStorage.setItem(LocalStorageKeys.ADMIN_TOKEN_TYPE, response.tokenType || 'Bearer');
+      Cookies.set(LocalStorageKeys.ADMIN_TOKEN, response.token!, { secure: true, sameSite: 'strict' });
+      Cookies.set(LocalStorageKeys.ADMIN_TOKEN_TYPE, response.tokenType || 'Bearer', { secure: true, sameSite: 'strict' });
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message);
+      if (!err.response && err.message === 'Network Error') {
+        setError('Não foi possível conectar ao servidor. Aguarde um momento e tente novamente.');
+      } else {
+        setError(err.message || 'Erro ao autenticar. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }

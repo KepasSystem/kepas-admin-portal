@@ -5,8 +5,8 @@ export class PlatformAdminService {
   constructor(private readonly httpClient: IHttpClient) {}
 
   async getAllAdmins(): Promise<{ success: boolean; data?: any[]; message?: string }> {
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    const response = await this.httpClient.get<any>(`${apiUrl}/api/v1/platformadmins`);
+    
+    const response = await this.httpClient.get<any>(`/api/v1/platformadmins`);
     
     if (response.isSuccess && response.body?.success) {
       return { success: true, data: response.body.data };
@@ -15,8 +15,8 @@ export class PlatformAdminService {
   }
 
   async createAdmin(data: any): Promise<{ success: boolean; message?: string }> {
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    const response = await this.httpClient.post<any>(`${apiUrl}/api/v1/platformadmins`, data);
+    
+    const response = await this.httpClient.post<any>(`/api/v1/platformadmins`, data);
     
     if (response.isSuccess && response.body?.success) {
       return { success: true, message: response.body.message };
@@ -25,8 +25,8 @@ export class PlatformAdminService {
   }
 
   async toggleStatus(id: string, isActive: boolean): Promise<{ success: boolean; message?: string }> {
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    const response = await this.httpClient.patch<any>(`${apiUrl}/api/v1/platformadmins/${id}/toggle-status`, isActive, {
+    
+    const response = await this.httpClient.patch<any>(`/api/v1/platformadmins/${id}/toggle-status`, isActive, {
       'Content-Type': 'application/json'
     });
     
@@ -36,5 +36,6 @@ export class PlatformAdminService {
     return { success: false, message: response.body?.message || 'Falha ao alterar status' };
   }
 }
+
 
 

@@ -6,9 +6,7 @@ export class AuthService {
   constructor(private readonly httpClient: IHttpClient) {}
 
   async superAdminLogin(email: string, password: string): Promise<AuthResult> {
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    
-    const response = await this.httpClient.post(`${apiUrl}${ApiEndpoints.SUPERADMIN_LOGIN}`, {
+    const response = await this.httpClient.post(`${ApiEndpoints.SUPERADMIN_LOGIN}`, {
       email,
       password,
     });
@@ -24,4 +22,3 @@ export class AuthService {
     return { success: false, message: response.body?.message || 'Falha na autenticação' };
   }
 }
-

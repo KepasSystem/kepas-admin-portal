@@ -17,14 +17,9 @@ export default function Dashboard() {
 
   const fetchKpis = async () => {
     const http = new AxiosHttpClient();
-    const token = localStorage.getItem(LocalStorageKeys.ADMIN_TOKEN);
-    const type = localStorage.getItem(LocalStorageKeys.ADMIN_TOKEN_TYPE) || 'Bearer';
-    const apiUrl = import.meta.env.VITE_API_URL || '';
 
     try {
-      const res = await http.get<any>(`${apiUrl}/api/v1/system-analytics/kpis`, {
-        Authorization: `${type} ${token}`
-      });
+      const res = await http.get<any>(`/api/v1/system-analytics/kpis`);
       if (res.isSuccess && res.body?.data) {
         setKpis(res.body.data);
       }
@@ -94,6 +89,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-
-

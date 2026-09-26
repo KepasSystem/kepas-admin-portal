@@ -14,16 +14,12 @@ export default function Subscriptions() {
 
   const fetchData = async () => {
     const http = new AxiosHttpClient();
-    const token = localStorage.getItem(LocalStorageKeys.ADMIN_TOKEN);
-    const type = localStorage.getItem(LocalStorageKeys.ADMIN_TOKEN_TYPE) || 'Bearer';
-    const headers = { Authorization: `${type} ${token}` };
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-
+    
     try {
-      const modRes = await http.get<any>(`${apiUrl}/api/v1/subscriptions/modules`, headers);
+      const modRes = await http.get<any>(`/api/v1/subscriptions/modules`);
       if (modRes.isSuccess) setModules(modRes.body?.data || []);
 
-      const planRes = await http.get<any>(`${apiUrl}/api/v1/subscriptions/plans`, headers);
+      const planRes = await http.get<any>(`/api/v1/subscriptions/plans`);
       if (planRes.isSuccess) setPlans(planRes.body?.data || []);
     } catch (e) {
       console.error(e);
@@ -99,6 +95,7 @@ export default function Subscriptions() {
     </div>
   );
 }
+
 
 
 
