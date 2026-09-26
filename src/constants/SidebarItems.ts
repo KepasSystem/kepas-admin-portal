@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, CreditCard, Settings, Building2, PaintBucket } from 'lucide-react';
+import { LayoutDashboard, Users, CreditCard, Settings, Building2, PaintBucket, Briefcase } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface ISidebarItem {
@@ -9,11 +9,10 @@ export interface ISidebarItem {
 
 export const ADMIN_SIDEBAR_ITEMS: ISidebarItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Tenants (Inquilinos)', path: '/dashboard/tenants', icon: Building2 },
+  { name: 'Contas de Serviço', path: '/dashboard/service-accounts', icon: Briefcase },
+  { name: 'Inquilinos (Tenants)', path: '/dashboard/tenants', icon: Building2 },
   { name: 'Assinaturas Globais', path: '/dashboard/subscriptions', icon: CreditCard },
-  { name: 'Personalização (Cores)', path: '/dashboard/themes', icon: PaintBucket },
+  { name: 'Personalização', path: '/dashboard/themes', icon: PaintBucket },
   { name: 'Controle de Acessos', path: '/dashboard/access', icon: Users },
-  { name: 'Configurações do Sistema', path: '/dashboard/settings', icon: Settings },
+  { name: 'Configurações', path: '/dashboard/settings', icon: Settings },
 ];
-
-

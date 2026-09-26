@@ -8,6 +8,7 @@ import Tenants from './pages/Tenants';
 import Settings from './pages/Settings';
 import Subscriptions from './pages/Subscriptions';
 import AccessControl from './pages/access-control/AccessControl';
+import ServiceAccounts from './pages/ServiceAccounts';
 
 import Dashboard from './pages/Dashboard';
 
@@ -22,6 +23,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<MainLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="service-accounts" element={<ServiceAccounts />} />
             <Route path="tenants" element={<Tenants />} />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="themes" element={<div>Configurar Cores e White-label</div>} />
