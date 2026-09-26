@@ -1,42 +1,61 @@
-import { LocalStorageKeys } from '../core/enums/LocalStorageKeys';
-import React, { useState, useEffect } from 'react';
-import { Package, Blocks, Plus, Edit } from 'lucide-react';
+import React, { useState } from 'react';
+import { Package, Blocks, Plus, Edit, DollarSign } from 'lucide-react';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Subscriptions() {
-  const [modules, setModules] = useState<any[]>([]);
-  const [plans, setPlans] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'modules' | 'plans'>('modules');
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const http = new AxiosHttpClient();
-    
-    try {
-      const modRes = await http.get<any>(`/api/v1/subscriptions/modules`);
-      if (modRes.isSuccess) setModules(modRes.body?.data || []);
-
-      const planRes = await http.get<any>(`/api/v1/subscriptions/plans`);
-      if (planRes.isSuccess) setPlans(planRes.body?.data || []);
-    } catch (e) {
-      console.error(e);
+  const { data: modules = [], isLoading: isLoadingModules } = useQuery({
+    queryKey: ['subscriptions', 'modules'],
+    queryFn: async () => {
+      const http = new AxiosHttpClient();
+      const res = await http.get<any>(`/api/v1/subscriptions/modules`);
+      if (!res.isSuccess) throw new Error(res.body?.message || 'Error fetching modules');
+      return res.body?.data || [];
     }
-  };
+  });
+
+  const { data: plans = [], isLoading: isLoadingPlans } = useQuery({
+    queryKey: ['subscriptions', 'plans'],
+    queryFn: async () => {
+      const http = new AxiosHttpClient();
+      const res = await http.get<any>(`/api/v1/subscriptions/plans`);
+      if (!res.isSuccess) throw new Error(res.body?.message || 'Error fetching plans');
+      return res.body?.data || [];
+    }
+  });
+
+  // Fetch KPIs just for the global MRR (or mock it for now since we don't have a specific MRR endpoint)
+  const { data: kpis } = useQuery({
+    queryKey: ['kpis'],
+    queryFn: async () => {
+      const http = new AxiosHttpClient();
+      const res = await http.get<any>(`/api/v1/system-analytics/kpis`);
+      return res.body?.data || { mrr: 0, activeSubscriptions: 0 };
+    }
+  });
 
   return (
     <div className="flex flex-col h-full max-w-6xl mx-auto w-full">
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Precificação e Empacotamento</h1>
           <p className="text-sm text-gray-500 mt-1">Gerencie módulos avulsos e combos promocionais.</p>
         </div>
-        <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
-          <Plus className="w-5 h-5 mr-2" />
-          {activeTab === 'modules' ? 'Precificar Novo Módulo' : 'Montar Novo Combo'}
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 flex items-center">
+            <DollarSign className="w-5 h-5 mr-2" />
+            <div className="flex flex-col">
+              <span className="text-xs uppercase font-bold tracking-wider">MRR Global</span>
+              <span className="font-black text-lg">R$ {kpis?.mrr?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+            </div>
+          </div>
+          <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm h-full py-3">
+            <Plus className="w-5 h-5 mr-2" />
+            {activeTab === 'modules' ? 'Novo Módulo' : 'Novo Combo'}
+          </button>
+        </div>
       </div>
 
       <div className="mb-6 border-b border-gray-200">
@@ -58,7 +77,8 @@ export default function Subscriptions() {
 
       {activeTab === 'modules' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {modules.map(m => (
+          {isLoadingModules && <div className="col-span-full text-center text-gray-500 py-10">Carregando módulos...</div>}
+          {!isLoadingModules && modules.map((m: any) => (
             <div key={m.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <div className="p-3 bg-blue-50 rounded-lg text-blue-600"><Blocks className="w-6 h-6" /></div>
@@ -74,7 +94,8 @@ export default function Subscriptions() {
 
       {activeTab === 'plans' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {plans.map(p => (
+          {isLoadingPlans && <div className="col-span-full text-center text-gray-500 py-10">Carregando planos...</div>}
+          {!isLoadingPlans && plans.map((p: any) => (
             <div key={p.id} className="bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-blue-500 transition-colors p-6 flex flex-col relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">COMBO OFERTA</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2 mt-4">{p.name}</h3>
