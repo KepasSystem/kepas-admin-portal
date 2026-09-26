@@ -1,3 +1,5 @@
+import { useAppTranslation } from '../core/i18n/useAppTranslation';
+import { TKeys } from '../core/i18n/TranslationKeys';
 import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +8,7 @@ import { LocalStorageKeys } from '../core/enums/LocalStorageKeys';
 import Cookies from 'js-cookie';
 
 export default function Login() {
-  const { t, i18n } = useTranslation();
+  const { t, changeLanguage } = useAppTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);

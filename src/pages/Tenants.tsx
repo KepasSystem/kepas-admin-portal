@@ -1,3 +1,5 @@
+import { useAppTranslation } from '../core/i18n/useAppTranslation';
+import { TKeys } from '../core/i18n/TranslationKeys';
 ﻿import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, CheckCircle, AlertCircle } from 'lucide-react';
@@ -11,6 +13,7 @@ import type { CreateTenantRequest } from '../core/interfaces/CreateTenantRequest
 import { showToast } from '../core/utils/toastUtils';
 
 export default function Tenants() {
+  const { t } = useAppTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -82,8 +85,8 @@ export default function Tenants() {
     <div className="flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">GestÃ£o de Clientes (Tenants)</h1>
-          <p className="text-sm text-gray-500 mt-1">Gerencie os inquilinos, status e permissÃµes da plataforma.</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t(TKeys.Tenants.Title)}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t(TKeys.Tenants.Subtitle)}</p>
         </div>
         
         <button 
@@ -91,7 +94,7 @@ export default function Tenants() {
           className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
         >
           <Plus className="w-5 h-5 mr-2" />
-          Novo Cliente
+          {t(TKeys.Tenants.NewTenant)}
         </button>
       </div>
 
@@ -112,7 +115,7 @@ export default function Tenants() {
             <input
               type="text"
               disabled
-              placeholder="Buscar por nome ou subdomÃ­nio..."
+              placeholder={t(TKeys.Common.Search)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
@@ -120,7 +123,7 @@ export default function Tenants() {
           <div className="flex items-center space-x-2 w-full sm:w-auto">
             <button className="flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors w-full sm:w-auto justify-center">
               <Filter className="w-4 h-4 mr-2 text-gray-500" />
-              Status: Todos
+              {t(TKeys.Common.Status)}: Todos
             </button>
           </div>
         </div>
@@ -130,19 +133,17 @@ export default function Tenants() {
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Empresa / Contato
+                  {t(TKeys.Tenants.Columns.Company)}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  SubdomÃ­nio
+                  {t(TKeys.Tenants.Columns.Subdomain)}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Plano Atual
+                  {t(TKeys.Tenants.Columns.CurrentPlan)}
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(TKeys.Common.Status)}</th>
                 <th scope="col" className="relative px-6 py-3">
-                  <span className="sr-only">AÃ§Ãµes</span>
+                  <span className="sr-only">{t(TKeys.Common.Actions)}</span>
                 </th>
               </tr>
             </thead>
@@ -150,13 +151,13 @@ export default function Tenants() {
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
-                    Carregando inquilinos...
+                    {t(TKeys.Tenants.Loading)}
                   </td>
                 </tr>
               ) : tenants.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
-                    Nenhum inquilino encontrado. Clique em Novo Cliente.
+                    {t(TKeys.Tenants.EmptyState)}
                   </td>
                 </tr>
               ) : (
@@ -189,7 +190,7 @@ export default function Tenants() {
                           ? 'bg-green-50 text-green-700 border-green-200' 
                           : 'bg-red-50 text-red-700 border-red-200'
                       }`}>
-                        {tenant.isActive ? 'Ativo' : 'Bloqueado'}
+                        {tenant.isActive ? t(TKeys.AccessControl.Admins.Status.Active) : t(TKeys.AccessControl.Admins.Status.Blocked)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -219,12 +220,12 @@ export default function Tenants() {
         
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Mostrando <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{data?.totalCount || 0}</span> inquilinos
+            {t(TKeys.Common.ShowingOf)} <span className="font-medium">{tenants.length}</span> / <span className="font-medium">{data?.totalCount || 0}</span>
           </div>
           <div className="flex space-x-2">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Previous)}</button>
             <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
-            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Próxima</button>
+            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Next)}</button>
           </div>
         </div>
       </div>
