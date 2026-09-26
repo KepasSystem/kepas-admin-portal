@@ -33,7 +33,7 @@ export class AxiosHttpClient implements IHttpClient {
       (error) => {
         if (error.response?.status === 401) {
           // Limpa tokens
-          localStorage.removeItem(LocalStorageKeys.ADMIN_TOKEN);
+          console.error('401 DETECTED', error.config?.url, error.response?.data); localStorage.removeItem(LocalStorageKeys.ADMIN_TOKEN);
           localStorage.removeItem(LocalStorageKeys.ADMIN_TOKEN_TYPE);
           
           // Redireciona para o login (reload forcado garante estado zerado da aplicacao)
@@ -119,5 +119,6 @@ export class AxiosHttpClient implements IHttpClient {
     return { statusCode: response.status, body: response.data, isSuccess: response.status >= 200 && response.status <= 299 };
   }
 }
+
 
 
