@@ -106,8 +106,9 @@ export default function Tenants() {
             </div>
             <input
               type="text"
+              disabled
               placeholder="Buscar por nome ou subdomínio..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
           
@@ -211,6 +212,7 @@ export default function Tenants() {
           </table>
         </div>
         
+        {/*
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
             Mostrando <span className="font-medium">{tenants.length > 0 ? 1 : 0}</span> a <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{tenants.length}</span> inquilinos
@@ -220,6 +222,7 @@ export default function Tenants() {
             <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-gray-50 cursor-not-allowed">Próxima</button>
           </div>
         </div>
+        */}
       </div>
       
       <CreateTenantModal 

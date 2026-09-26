@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Package, Blocks, Plus, Edit, DollarSign } from 'lucide-react';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import { useQuery } from '@tanstack/react-query';
+import { showToast } from '../core/utils/toastUtils';
 
 export default function Subscriptions() {
   const [activeTab, setActiveTab] = useState<'modules' | 'plans'>('modules');
@@ -51,7 +52,10 @@ export default function Subscriptions() {
               <span className="font-black text-lg">R$ {kpis?.mrr?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
             </div>
           </div>
-          <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm h-full py-3">
+          <button 
+            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm h-full py-3"
+            onClick={() => showToast.info('Em Breve!')}
+          >
             <Plus className="w-5 h-5 mr-2" />
             {activeTab === 'modules' ? 'Novo Módulo' : 'Novo Combo'}
           </button>
