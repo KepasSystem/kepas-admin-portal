@@ -7,8 +7,16 @@
     "forgotPassword": "Esqueci minha senha"
   },
   "dashboard": {
-    "title": "Visão Geral",
-    "subtitle": "Gerencie seu negócio e acompanhe seus resultados."
+    "title": "Visão Geral da KEPAS",
+    "subtitle": "Monitore a saúde financeira e o volume de clientes da plataforma.",
+    "downloadReport": "Baixar Relatório (PDF)",
+    "mrr": "Receita Mensal (MRR)",
+    "serviceAccounts": "Contas de Serviço",
+    "tenants": "Inquilinos (Tenants)",
+    "activeTenants": "ativos",
+    "newSubscriptionsToday": "Novas Assinaturas Hoje",
+    "growthChart": "Gráfico de Crescimento",
+    "chartPlaceholder": "Implementação de Chart.js/Recharts planejada para a próxima versão."
   },
   "menus": {
     "home": "Início",
