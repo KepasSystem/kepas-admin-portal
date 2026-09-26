@@ -1,62 +1,62 @@
-{
-    "login":  {
-                  "welcome":  "Bem-vindo de volta",
-                  "emailLabel":  "E-mail de acesso",
-                  "passwordLabel":  "Senha",
-                  "button":  "Entrar",
-                  "forgotPassword":  "Esqueci minha senha"
-              },
-    "dashboard":  {
-                      "title":  "Visão Geral",
-                      "subtitle":  "Gerencie seu negócio e acompanhe seus resultados."
-                  },
-    "menus":  {
-                  "home":  "Início",
-                  "services":  "Meus Serviços",
-                  "customers":  "Clientes",
-                  "bookings":  "Agenda Global",
-                  "settings":  "Configurações"
-              },
-    "common":  {
-                   "save":  "Salvar",
-                   "cancel":  "Cancelar",
-                   "loading":  "Carregando..."
-               },
-    "accessControl":  {
-                          "tabs":  {
-                                       "roles":  "Cargos e Permiss�es",
-                                       "admins":  "Administradores Globais"
-                                   },
-                          "title":  "Controle de Acessos",
-                          "roles":  {
-                                        "loading":  "Carregando cargos...",
-                                        "confirmDelete":  "Tem certeza que deseja remover este cargo?",
-                                        "columns":  {
-                                                        "actions":  "A��es",
-                                                        "permissions":  "Permiss�es",
-                                                        "role":  "Cargo"
-                                                    },
-                                        "newRole":  "Novo Cargo"
-                                    },
-                          "subtitle":  "Gerencie cargos, permiss�es e contas de administradores da plataforma global.",
-                          "admins":  {
-                                         "newAdmin":  "Novo Usu�rio",
-                                         "columns":  {
-                                                         "actions":  "A��es",
-                                                         "status":  "Status",
-                                                         "user":  "Usu�rio",
-                                                         "role":  "Cargo"
-                                                     },
-                                         "loading":  "Carregando usu�rios...",
-                                         "tooltips":  {
-                                                          "block":  "Bloquear Acesso",
-                                                          "unblock":  "Desbloquear Acesso"
-                                                      },
-                                         "noRole":  "Sem Cargo",
-                                         "status":  {
-                                                        "active":  "Ativo",
-                                                        "blocked":  "Bloqueado"
-                                                    }
-                                     }
-                      }
+﻿{
+  "login": {
+    "welcome": "Bem-vindo de volta",
+    "emailLabel": "E-mail de acesso",
+    "passwordLabel": "Senha",
+    "button": "Entrar",
+    "forgotPassword": "Esqueci minha senha"
+  },
+  "dashboard": {
+    "title": "Visão Geral",
+    "subtitle": "Gerencie seu negócio e acompanhe seus resultados."
+  },
+  "menus": {
+    "home": "Início",
+    "services": "Meus Serviços",
+    "customers": "Clientes",
+    "bookings": "Agenda Global",
+    "settings": "Configurações"
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "loading": "Carregando..."
+  },
+  "accessControl": {
+    "tabs": {
+      "roles": "Cargos e Permissões",
+      "admins": "Administradores Globais"
+    },
+    "title": "Controle de Acessos",
+    "roles": {
+      "loading": "Carregando cargos...",
+      "confirmDelete": "Tem certeza que deseja remover este cargo?",
+      "columns": {
+        "actions": "Ações",
+        "permissions": "Permissões",
+        "role": "Cargo"
+      },
+      "newRole": "Novo Cargo"
+    },
+    "subtitle": "Gerencie cargos, permissões e contas de administradores da plataforma global.",
+    "admins": {
+      "newAdmin": "Novo Usuário",
+      "columns": {
+        "actions": "Ações",
+        "status": "Status",
+        "user": "Usuário",
+        "role": "Cargo"
+      },
+      "loading": "Carregando usuários...",
+      "tooltips": {
+        "block": "Bloquear Acesso",
+        "unblock": "Desbloquear Acesso"
+      },
+      "noRole": "Sem Cargo",
+      "status": {
+        "active": "Ativo",
+        "blocked": "Bloqueado"
+      }
+    }
+  }
 }

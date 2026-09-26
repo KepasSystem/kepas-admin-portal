@@ -40,6 +40,10 @@ export default function ServiceAccounts() {
     createMutation.mutate(data);
   };
 
+  if (error) {
+    return <div className="p-4 text-red-500">Erro ao carregar contas.</div>;
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
@@ -67,6 +71,7 @@ export default function ServiceAccounts() {
               type="text"
               placeholder="Buscar por nome ou email..."
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
+              disabled
             />
           </div>
         </div>
