@@ -1,4 +1,4 @@
-import type { IHttpClient } from '../core/interfaces/IHttpClient';
+﻿import type { IHttpClient } from '../core/interfaces/IHttpClient';
 import { ApiEndpoints } from '../constants/ApiEndpoints';
 import type { TenantDTO } from '../core/interfaces/TenantDTO';
 import type { CreateTenantRequest } from '../core/interfaces/CreateTenantRequest';
@@ -6,9 +6,10 @@ import type { CreateTenantRequest } from '../core/interfaces/CreateTenantRequest
 export class TenantService {
   constructor(private readonly httpClient: IHttpClient) {}
 
-  async getAllTenants(): Promise<{ success: boolean; data?: TenantDTO[]; message?: string }> {
+  async getAllTenants(search: string = '', page: number = 1, limit: number = 10): Promise<{ success: boolean; data?: { items: TenantDTO[], totalCount: number, pageNumber: number, pageSize: number }; message?: string }> {
+    const query = new URLSearchParams({ search, page: page.toString(), limit: limit.toString() }).toString();
     const response = await this.httpClient.get<any>(
-      `${ApiEndpoints.TENANTS}`
+      `${ApiEndpoints.TENANTS}?${query}`
     );
 
     if (response.isSuccess && response.body?.success) {
@@ -43,6 +44,7 @@ export class TenantService {
     return { success: false, message: response.body?.message || 'Falha ao alterar status' };
   }
 }
+
 
 
 
