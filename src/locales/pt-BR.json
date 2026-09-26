@@ -1,0 +1,62 @@
+{
+    "login":  {
+                  "welcome":  "Bem-vindo de volta",
+                  "emailLabel":  "E-mail de acesso",
+                  "passwordLabel":  "Senha",
+                  "button":  "Entrar",
+                  "forgotPassword":  "Esqueci minha senha"
+              },
+    "dashboard":  {
+                      "title":  "Vis√£o Geral",
+                      "subtitle":  "Gerencie seu neg√≥cio e acompanhe seus resultados."
+                  },
+    "menus":  {
+                  "home":  "In√≠cio",
+                  "services":  "Meus Servi√ßos",
+                  "customers":  "Clientes",
+                  "bookings":  "Agenda Global",
+                  "settings":  "Configura√ß√µes"
+              },
+    "common":  {
+                   "save":  "Salvar",
+                   "cancel":  "Cancelar",
+                   "loading":  "Carregando..."
+               },
+    "accessControl":  {
+                          "tabs":  {
+                                       "roles":  "Cargos e Permissıes",
+                                       "admins":  "Administradores Globais"
+                                   },
+                          "title":  "Controle de Acessos",
+                          "roles":  {
+                                        "loading":  "Carregando cargos...",
+                                        "confirmDelete":  "Tem certeza que deseja remover este cargo?",
+                                        "columns":  {
+                                                        "actions":  "AÁıes",
+                                                        "permissions":  "Permissıes",
+                                                        "role":  "Cargo"
+                                                    },
+                                        "newRole":  "Novo Cargo"
+                                    },
+                          "subtitle":  "Gerencie cargos, permissıes e contas de administradores da plataforma global.",
+                          "admins":  {
+                                         "newAdmin":  "Novo Usu·rio",
+                                         "columns":  {
+                                                         "actions":  "AÁıes",
+                                                         "status":  "Status",
+                                                         "user":  "Usu·rio",
+                                                         "role":  "Cargo"
+                                                     },
+                                         "loading":  "Carregando usu·rios...",
+                                         "tooltips":  {
+                                                          "block":  "Bloquear Acesso",
+                                                          "unblock":  "Desbloquear Acesso"
+                                                      },
+                                         "noRole":  "Sem Cargo",
+                                         "status":  {
+                                                        "active":  "Ativo",
+                                                        "blocked":  "Bloqueado"
+                                                    }
+                                     }
+                      }
+}

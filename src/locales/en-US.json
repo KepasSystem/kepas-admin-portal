@@ -1,0 +1,62 @@
+{
+    "login":  {
+                  "welcome":  "Welcome back",
+                  "emailLabel":  "Email address",
+                  "passwordLabel":  "Password",
+                  "button":  "Sign In",
+                  "forgotPassword":  "Forgot my password"
+              },
+    "dashboard":  {
+                      "title":  "Overview",
+                      "subtitle":  "Manage your business and track your results."
+                  },
+    "menus":  {
+                  "home":  "Home",
+                  "services":  "My Services",
+                  "customers":  "Customers",
+                  "bookings":  "Global Calendar",
+                  "settings":  "Settings"
+              },
+    "common":  {
+                   "save":  "Save",
+                   "cancel":  "Cancel",
+                   "loading":  "Loading..."
+               },
+    "accessControl":  {
+                          "tabs":  {
+                                       "roles":  "Roles \u0026 Permissions",
+                                       "admins":  "Global Administrators"
+                                   },
+                          "title":  "Access Control",
+                          "roles":  {
+                                        "loading":  "Loading roles...",
+                                        "confirmDelete":  "Are you sure you want to remove this role?",
+                                        "columns":  {
+                                                        "actions":  "Actions",
+                                                        "permissions":  "Permissions",
+                                                        "role":  "Role"
+                                                    },
+                                        "newRole":  "New Role"
+                                    },
+                          "subtitle":  "Manage roles, permissions, and administrator accounts for the global platform.",
+                          "admins":  {
+                                         "newAdmin":  "New User",
+                                         "columns":  {
+                                                         "actions":  "Actions",
+                                                         "status":  "Status",
+                                                         "user":  "User",
+                                                         "role":  "Role"
+                                                     },
+                                         "loading":  "Loading users...",
+                                         "tooltips":  {
+                                                          "block":  "Block Access",
+                                                          "unblock":  "Unblock Access"
+                                                      },
+                                         "noRole":  "No Role",
+                                         "status":  {
+                                                        "active":  "Active",
+                                                        "blocked":  "Blocked"
+                                                    }
+                                     }
+                      }
+}
