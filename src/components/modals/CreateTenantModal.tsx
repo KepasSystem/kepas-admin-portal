@@ -1,3 +1,4 @@
+import { DI } from '../../core/di/DependencyInjection';
 import React, { useState } from 'react';
 import { X, Copy, CheckCircle2 } from 'lucide-react';
 import type { CreateTenantRequest } from '../../core/interfaces/CreateTenantRequest';
@@ -28,7 +29,7 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
   const { data: serviceAccounts = [], isLoading: loadingAccounts } = useQuery({
     queryKey: ['serviceAccounts'],
     queryFn: async () => {
-      const service = new ServiceAccountService(new AxiosHttpClient());
+      const service = DI.getServiceAccountService();
       const response = await service.getAllAccounts();
       if (!response.success) throw new Error(response.message);
       return response.data || [];

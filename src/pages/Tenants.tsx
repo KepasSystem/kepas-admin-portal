@@ -1,3 +1,4 @@
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, CheckCircle, AlertCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,7 +19,7 @@ export default function Tenants() {
   });
   
   const queryClient = useQueryClient();
-  const tenantService = useMemo(() => new TenantService(new AxiosHttpClient()), []);
+  const tenantService = useMemo(() => DI.getTenantService(), []);
 
   const { data: tenants = [], isLoading, error } = useQuery({
     queryKey: ['tenants'],

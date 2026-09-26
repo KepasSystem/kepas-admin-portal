@@ -1,8 +1,7 @@
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthService } from '../services/AuthService';
-import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import { LocalStorageKeys } from '../core/enums/LocalStorageKeys';
 import Cookies from 'js-cookie';
 
@@ -15,7 +14,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   // Injetando dependências manualmente (poderia usar context ou hooks customizados)
-  const authService = useMemo(() => new AuthService(new AxiosHttpClient()), []);
+  const authService = useMemo(() => DI.getAuthService(), []);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;

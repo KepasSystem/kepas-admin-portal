@@ -1,13 +1,12 @@
+import { DI } from '../../../core/di/DependencyInjection';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { PlatformRoleService } from '../../../services/PlatformRoleService';
-import { AxiosHttpClient } from '../../../infrastructure/http/AxiosHttpClient';
 import { Shield, Plus, Trash2, Loader2 } from 'lucide-react';
 import { CreateRoleModal } from './modals/CreateRoleModal';
 
-const service = new PlatformRoleService(new AxiosHttpClient());
+const service = DI.getPlatformRoleService();
 
 export default function RolesTab() {
   const { t } = useTranslation();
