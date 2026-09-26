@@ -1,10 +1,12 @@
-import { DI } from '../core/di/DependencyInjection';
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { DollarSign, Users, Briefcase, TrendingUp } from 'lucide-react';
 import { AxiosHttpClient } from '../infrastructure/http/AxiosHttpClient';
 import { showToast } from '../core/utils/toastUtils';
+import { useTranslation } from 'react-i18next';
+import { DI } from '../core/di/DependencyInjection';
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [kpis, setKpis] = useState({
     totalServiceAccounts: 0,
     totalTenants: 0,
@@ -38,14 +40,14 @@ export default function Dashboard() {
     <div className="flex flex-col h-full max-w-7xl mx-auto w-full space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Visão Geral da KEPAS</h1>
-          <p className="text-sm text-gray-500 mt-1">Monitore a saúde financeira e o volume de clientes da plataforma.</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('dashboard.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.subtitle')}</p>
         </div>
         <button 
           onClick={() => showToast.info('Em Breve!')}
           className="text-sm text-blue-600 font-medium hover:underline"
         >
-          Baixar Relatório (PDF)
+          {t('dashboard.downloadReport')}
         </button>
       </div>
 
@@ -53,20 +55,20 @@ export default function Dashboard() {
         {/* MRR */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
-            <p className="text-sm font-medium text-gray-500">Receita Mensal (MRR)</p>
+            <p className="text-sm font-medium text-gray-500">{t('dashboard.mrr')}</p>
             <div className="p-2 bg-green-50 rounded-lg text-green-600"><DollarSign className="w-5 h-5" /></div>
           </div>
           <div className="flex items-end space-x-2">
             <h3 className="text-3xl font-black text-gray-900">
-              {loading ? '...' : `R$ ${kpis.mrr.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+              {loading ? '...' : new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(kpis.mrr)}
             </h3>
           </div>
         </div>
 
-        {/* Contas de Serviço */}
+        {/* Contas de ServiÃ§o */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
-            <p className="text-sm font-medium text-gray-500">Contas de Serviço</p>
+            <p className="text-sm font-medium text-gray-500">{t('dashboard.serviceAccounts')}</p>
             <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><Briefcase className="w-5 h-5" /></div>
           </div>
           <div className="flex items-end space-x-2">
@@ -77,19 +79,19 @@ export default function Dashboard() {
         {/* Tenants Ativos */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
-            <p className="text-sm font-medium text-gray-500">Inquilinos (Tenants)</p>
+            <p className="text-sm font-medium text-gray-500">{t('dashboard.tenants')}</p>
             <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Users className="w-5 h-5" /></div>
           </div>
           <div className="flex items-end space-x-2">
             <h3 className="text-3xl font-black text-gray-900">{loading ? '...' : kpis.activeTenants}</h3>
-            <span className="text-sm font-medium text-gray-500 mb-1">/ {kpis.totalTenants} ativos</span>
+            <span className="text-sm font-medium text-gray-500 mb-1">/ {kpis.totalTenants} {t('dashboard.activeTenants')}</span>
           </div>
         </div>
 
         {/* Inativos */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
-            <p className="text-sm font-medium text-gray-500">Novas Assinaturas Hoje</p>
+            <p className="text-sm font-medium text-gray-500">{t('dashboard.newSubscriptionsToday')}</p>
             <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600"><TrendingUp className="w-5 h-5" /></div>
           </div>
           <div className="flex items-end space-x-2">
@@ -100,10 +102,11 @@ export default function Dashboard() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex-1 min-h-[400px] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 font-medium mb-2">Gráfico de Crescimento</p>
-          <p className="text-sm text-gray-400">Implementação de Chart.js/Recharts planejada para a próxima versão.</p>
+          <p className="text-gray-400 font-medium mb-2">{t('dashboard.growthChart')}</p>
+          <p className="text-sm text-gray-400">{t('dashboard.chartPlaceholder')}</p>
         </div>
       </div>
     </div>
   );
 }
+
