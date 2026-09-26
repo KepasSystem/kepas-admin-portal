@@ -4,5 +4,6 @@ export interface CreateTenantRequest {
   email: string;
   ownerName?: string;
   ownerPassword?: string;
+  accountId: string;
 }
 

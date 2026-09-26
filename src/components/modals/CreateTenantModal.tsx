@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { X, Copy, CheckCircle2 } from 'lucide-react';
 import type { CreateTenantRequest } from '../../core/interfaces/CreateTenantRequest';
+import { useQuery } from '@tanstack/react-query';
+import { ServiceAccountService } from '../../services/ServiceAccountService';
+import { AxiosHttpClient } from '../../infrastructure/http/AxiosHttpClient';
 
 interface CreateTenantModalProps {
   isOpen: boolean;
@@ -14,11 +17,24 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
     subdomain: '',
     email: '',
     ownerName: '',
+    accountId: ''
   });
 
   const [generatedPassword, setGeneratedPassword] = useState('');
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Fetch Service Accounts
+  const { data: serviceAccounts = [], isLoading: loadingAccounts } = useQuery({
+    queryKey: ['serviceAccounts'],
+    queryFn: async () => {
+      const service = new ServiceAccountService(new AxiosHttpClient());
+      const response = await service.getAllAccounts();
+      if (!response.success) throw new Error(response.message);
+      return response.data || [];
+    },
+    enabled: isOpen
+  });
 
   if (!isOpen) return null;
 
@@ -44,6 +60,10 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
       alert("Por favor, gere uma senha provisória primeiro.");
       return;
     }
+    if (!formData.accountId) {
+      alert("Por favor, selecione uma Conta de Serviço.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -59,13 +79,33 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-xl font-bold text-gray-800">Provisionar Novo Inquilino</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1">
           <div className="space-y-4">
+            
+            {/* Service Account Dropdown */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Conta de Serviço Vinculada</label>
+              <select
+                required
+                value={formData.accountId}
+                onChange={(e) => setFormData({ ...formData, accountId: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                disabled={loadingAccounts}
+              >
+                <option value="">Selecione uma conta...</option>
+                {serviceAccounts.map((acc: any) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.ownerName} ({acc.email})
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Negócio</label>
               <input
@@ -162,7 +202,7 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
             </button>
             <button
               type="submit"
-              disabled={loading || !generatedPassword}
+              disabled={loading || !generatedPassword || !formData.accountId}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Provisionando...' : 'Criar Inquilino'}
