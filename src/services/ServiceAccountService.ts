@@ -12,7 +12,7 @@ export class ServiceAccountService {
     return { success: false, message: response.body?.message || 'Falha ao carregar contas de serviço' };
   }
 
-  async createAccount(data: any): Promise<{ success: boolean; data?: ServiceAccountDTO; message?: string }> {
+  async createAccount(data: { ownerName: string; email: string; password: string }): Promise<{ success: boolean; data?: ServiceAccountDTO; message?: string }> {
     const response = await this.httpClient.post<any>('/api/v1/serviceaccounts', data);
     if (response.isSuccess && response.body?.success) {
       return { success: true, data: response.body.data };
