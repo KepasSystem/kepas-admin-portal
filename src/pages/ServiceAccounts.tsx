@@ -1,4 +1,4 @@
-import { DI } from '../core/di/DependencyInjection';
+﻿import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, Edit, Eye, Building, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,7 +25,7 @@ export default function ServiceAccounts() {
     mutationFn: (data: any) => serviceAccountService.createAccount(data),
     onSuccess: (response) => {
       if (response.success) {
-        showToast.success('Conta de serviço criada com sucesso!');
+        showToast.success('Conta de serviÃ§o criada com sucesso!');
         setIsModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ['serviceAccounts'] });
       } else {
@@ -49,8 +49,8 @@ export default function ServiceAccounts() {
     <div className="flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Contas de Serviço</h1>
-          <p className="text-sm text-gray-500 mt-1">Gerencie os clientes globais (corporações) que detêm Inquilinos na KEPAS.</p>
+          <h1 className="text-2xl font-bold text-gray-800">Contas de ServiÃ§o</h1>
+          <p className="text-sm text-gray-500 mt-1">Gerencie os clientes globais (corporaÃ§Ãµes) que detÃªm Inquilinos na KEPAS.</p>
         </div>
         
         <button 
@@ -85,14 +85,14 @@ export default function ServiceAccounts() {
                 <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Inquilinos Vinculados</th>
                 <th scope="col" className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Assinaturas Ativas</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Criada em</th>
-                <th scope="col" className="relative px-6 py-3"><span className="sr-only">Ações</span></th>
+                <th scope="col" className="relative px-6 py-3"><span className="sr-only">AÃ§Ãµes</span></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
-                    Carregando contas de serviço...
+                    Carregando contas de serviÃ§o...
                   </td>
                 </tr>
               ) : accounts.length === 0 ? (
@@ -142,6 +142,17 @@ export default function ServiceAccounts() {
           </table>
         </div>
       </div>
+        <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Mostrando <span className="font-medium">{accounts.length}</span> de <span className="font-medium">{data?.totalCount || 0}</span> contas
+          </div>
+          <div className="flex space-x-2">
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
+            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
+            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Próxima</button>
+          </div>
+        </div>
+
 
       <CreateServiceAccountModal 
         isOpen={isModalOpen}
@@ -151,3 +162,4 @@ export default function ServiceAccounts() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { DI } from '../core/di/DependencyInjection';
+﻿import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, CheckCircle, AlertCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,6 +12,8 @@ import { showToast } from '../core/utils/toastUtils';
 
 export default function Tenants() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, tenantId: string, currentStatus: boolean}>({
     isOpen: false,
     tenantId: '',
@@ -21,14 +23,16 @@ export default function Tenants() {
   const queryClient = useQueryClient();
   const tenantService = useMemo(() => DI.resolve<any>('ITenantService'), []);
 
-  const { data: tenants = [], isLoading, error } = useQuery({
-    queryKey: ['tenants'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['tenants', search, page],
     queryFn: async () => {
-      const response = await tenantService.getAllTenants();
+      const response = await tenantService.getAllTenants(search, page, 10);
       if (!response.success) throw new Error(response.message);
-      return response.data || [];
+      return response.data || { items: [], totalCount: 0, pageNumber: 1, pageSize: 10 };
     }
   });
+
+  const tenants = data?.items || [];
 
   const createMutation = useMutation({
     mutationFn: (data: CreateTenantRequest) => tenantService.createTenant(data),
@@ -50,7 +54,7 @@ export default function Tenants() {
     mutationFn: (id: string) => tenantService.toggleStatus(id),
     onSuccess: (response) => {
       if (response.success) {
-        showToast.success(response.message || 'Status alterado com sucesso', 'Ação Concluída');
+        showToast.success(response.message || 'Status alterado com sucesso', 'AÃ§Ã£o ConcluÃ­da');
         queryClient.invalidateQueries({ queryKey: ['tenants'] });
       } else {
         showToast.error(response.message || 'Erro ao alterar status', 'Falha');
@@ -78,8 +82,8 @@ export default function Tenants() {
     <div className="flex flex-col h-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Gestão de Clientes (Tenants)</h1>
-          <p className="text-sm text-gray-500 mt-1">Gerencie os inquilinos, status e permissões da plataforma.</p>
+          <h1 className="text-2xl font-bold text-gray-800">GestÃ£o de Clientes (Tenants)</h1>
+          <p className="text-sm text-gray-500 mt-1">Gerencie os inquilinos, status e permissÃµes da plataforma.</p>
         </div>
         
         <button 
@@ -94,7 +98,7 @@ export default function Tenants() {
       {error && (
         <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-lg flex items-center">
           <AlertCircle className="w-5 h-5 mr-2" />
-          {error instanceof Error ? error.message : 'Erro de conexão'}
+          {error instanceof Error ? error.message : 'Erro de conexÃ£o'}
         </div>
       )}
 
@@ -108,7 +112,7 @@ export default function Tenants() {
             <input
               type="text"
               disabled
-              placeholder="Buscar por nome ou subdomínio..."
+              placeholder="Buscar por nome ou subdomÃ­nio..."
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
@@ -129,7 +133,7 @@ export default function Tenants() {
                   Empresa / Contato
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Subdomínio
+                  SubdomÃ­nio
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Plano Atual
@@ -138,7 +142,7 @@ export default function Tenants() {
                   Status
                 </th>
                 <th scope="col" className="relative px-6 py-3">
-                  <span className="sr-only">Ações</span>
+                  <span className="sr-only">AÃ§Ãµes</span>
                 </th>
               </tr>
             </thead>
@@ -213,17 +217,16 @@ export default function Tenants() {
           </table>
         </div>
         
-        {/*
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Mostrando <span className="font-medium">{tenants.length > 0 ? 1 : 0}</span> a <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{tenants.length}</span> inquilinos
+            Mostrando <span className="font-medium">{tenants.length}</span> de <span className="font-medium">{data?.totalCount || 0}</span> inquilinos
           </div>
           <div className="flex space-x-2">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-gray-50 cursor-not-allowed">Anterior</button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-gray-50 cursor-not-allowed">Próxima</button>
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Anterior</button>
+            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
+            <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">Próxima</button>
           </div>
         </div>
-        */}
       </div>
       
       <CreateTenantModal 
@@ -235,7 +238,7 @@ export default function Tenants() {
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={confirmModal.currentStatus ? "Suspender Inquilino" : "Ativar Inquilino"}
-        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuários vinculados perderão o acesso.' : ''}`}
+        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuÃ¡rios vinculados perderÃ£o o acesso.' : ''}`}
         type={confirmModal.currentStatus ? "warning" : "info"}
         confirmText={confirmModal.currentStatus ? "Suspender" : "Ativar"}
         onConfirm={handleToggleConfirm}
@@ -244,4 +247,7 @@ export default function Tenants() {
     </div>
   );
 }
+
+
+
 
