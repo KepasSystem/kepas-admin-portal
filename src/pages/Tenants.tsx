@@ -1,6 +1,6 @@
 import { useAppTranslation } from '../core/i18n/useAppTranslation';
 import { TKeys } from '../core/i18n/TranslationKeys';
-﻿import { DI } from '../core/di/DependencyInjection';
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, MoreHorizontal, Edit, Eye, Ban, CheckCircle, AlertCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -57,7 +57,7 @@ export default function Tenants() {
     mutationFn: (id: string) => tenantService.toggleStatus(id),
     onSuccess: (response) => {
       if (response.success) {
-        showToast.success(response.message || 'Status alterado com sucesso', 'AÃ§Ã£o ConcluÃ­da');
+        showToast.success(response.message || 'Status alterado com sucesso', 'AÃƒÂ§ÃƒÂ£o ConcluÃƒÂ­da');
         queryClient.invalidateQueries({ queryKey: ['tenants'] });
       } else {
         showToast.error(response.message || 'Erro ao alterar status', 'Falha');
@@ -101,7 +101,7 @@ export default function Tenants() {
       {error && (
         <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-lg flex items-center">
           <AlertCircle className="w-5 h-5 mr-2" />
-          {error instanceof Error ? error.message : 'Erro de conexÃ£o'}
+          {error instanceof Error ? error.message : 'Erro de conexÃƒÂ£o'}
         </div>
       )}
 
@@ -114,7 +114,6 @@ export default function Tenants() {
             </div>
             <input
               type="text"
-              disabled
               placeholder={t(TKeys.Common.Search)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
@@ -220,11 +219,11 @@ export default function Tenants() {
         
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            {t(TKeys.Common.ShowingOf)} <span className="font-medium">{tenants.length}</span> / <span className="font-medium">{data?.totalCount || 0}</span>
+            {t(TKeys.Common.ShowingOf, { count: tenants.length, total: data?.totalCount || 0 })}
           </div>
           <div className="flex space-x-2">
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Previous)}</button>
-            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
+            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">PÃ¡gina {page}</span>
             <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Next)}</button>
           </div>
         </div>
@@ -239,7 +238,7 @@ export default function Tenants() {
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={confirmModal.currentStatus ? "Suspender Inquilino" : "Ativar Inquilino"}
-        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuÃ¡rios vinculados perderÃ£o o acesso.' : ''}`}
+        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuÃƒÂ¡rios vinculados perderÃƒÂ£o o acesso.' : ''}`}
         type={confirmModal.currentStatus ? "warning" : "info"}
         confirmText={confirmModal.currentStatus ? "Suspender" : "Ativar"}
         onConfirm={handleToggleConfirm}
@@ -248,6 +247,8 @@ export default function Tenants() {
     </div>
   );
 }
+
+
 
 
 

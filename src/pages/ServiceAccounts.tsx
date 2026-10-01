@@ -1,6 +1,6 @@
 import { useAppTranslation } from '../core/i18n/useAppTranslation';
 import { TKeys } from '../core/i18n/TranslationKeys';
-﻿import { DI } from '../core/di/DependencyInjection';
+import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Filter, Edit, Eye, Building, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,7 +28,7 @@ export default function ServiceAccounts() {
     mutationFn: (data: any) => serviceAccountService.createAccount(data),
     onSuccess: (response) => {
       if (response.success) {
-        showToast.success('Conta de serviÃ§o criada com sucesso!');
+        showToast.success('Conta de serviÃƒÂ§o criada com sucesso!');
         setIsModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ['serviceAccounts'] });
       } else {
@@ -75,7 +75,6 @@ export default function ServiceAccounts() {
               type="text"
               placeholder={t(TKeys.Common.Search)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
-              disabled
             />
           </div>
         </div>
@@ -147,11 +146,11 @@ export default function ServiceAccounts() {
       </div>
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6 flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            {t(TKeys.Common.ShowingOf)} <span className="font-medium">{accounts.length}</span> / <span className="font-medium">{data?.totalCount || 0}</span>
+            {t(TKeys.Common.ShowingOf, { count: accounts.length, total: data?.totalCount || 0 })}
           </div>
           <div className="flex space-x-2">
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Previous)}</button>
-            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">Página {page}</span>
+            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">PÃ¡gina {page}</span>
             <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Next)}</button>
           </div>
         </div>
@@ -165,4 +164,5 @@ export default function ServiceAccounts() {
     </div>
   );
 }
+
 
