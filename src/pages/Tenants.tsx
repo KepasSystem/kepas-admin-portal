@@ -1,4 +1,4 @@
-import { useAppTranslation } from '../core/i18n/useAppTranslation';
+﻿import { useAppTranslation } from '../core/i18n/useAppTranslation';
 import { TKeys } from '../core/i18n/TranslationKeys';
 import { DI } from '../core/di/DependencyInjection';
 import React, { useState, useMemo } from 'react';
@@ -57,7 +57,7 @@ export default function Tenants() {
     mutationFn: (id: string) => tenantService.toggleStatus(id),
     onSuccess: (response) => {
       if (response.success) {
-        showToast.success(response.message || 'Status alterado com sucesso', 'AÃƒÂ§ÃƒÂ£o ConcluÃƒÂ­da');
+        showToast.success(response.message || 'Status alterado com sucesso', 'AÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o ConcluÃƒÆ’Ã‚Â­da');
         queryClient.invalidateQueries({ queryKey: ['tenants'] });
       } else {
         showToast.error(response.message || 'Erro ao alterar status', 'Falha');
@@ -101,7 +101,7 @@ export default function Tenants() {
       {error && (
         <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-lg flex items-center">
           <AlertCircle className="w-5 h-5 mr-2" />
-          {error instanceof Error ? error.message : 'Erro de conexÃƒÂ£o'}
+          {error instanceof Error ? error.message : 'Erro de conexÃƒÆ’Ã‚Â£o'}
         </div>
       )}
 
@@ -175,7 +175,7 @@ export default function Tenants() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 font-mono bg-gray-100 inline-block px-2 py-1 rounded">
-                        {tenant.subdomain}.kepas.com
+                        {tenant.subdomain}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -223,7 +223,7 @@ export default function Tenants() {
           </div>
           <div className="flex space-x-2">
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Previous)}</button>
-            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">PÃ¡gina {page}</span>
+            <span className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white">PÃƒÂ¡gina {page}</span>
             <button onClick={() => setPage(p => p + 1)} disabled={!data || data.pageNumber * data.pageSize >= data.totalCount} className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 bg-white hover:bg-gray-50 disabled:opacity-50">{t(TKeys.Common.Next)}</button>
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function Tenants() {
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={confirmModal.currentStatus ? "Suspender Inquilino" : "Ativar Inquilino"}
-        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuÃƒÂ¡rios vinculados perderÃƒÂ£o o acesso.' : ''}`}
+        message={`Tem certeza que deseja ${confirmModal.currentStatus ? 'suspender' : 'ativar'} este inquilino? ${confirmModal.currentStatus ? 'Os usuÃƒÆ’Ã‚Â¡rios vinculados perderÃƒÆ’Ã‚Â£o o acesso.' : ''}`}
         type={confirmModal.currentStatus ? "warning" : "info"}
         confirmText={confirmModal.currentStatus ? "Suspender" : "Ativar"}
         onConfirm={handleToggleConfirm}
@@ -247,6 +247,7 @@ export default function Tenants() {
     </div>
   );
 }
+
 
 
 
