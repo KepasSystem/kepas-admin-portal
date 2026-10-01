@@ -120,20 +120,8 @@ export default function CreateTenantModal({ isOpen, onClose, onSubmit }: CreateT
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subdomínio KEPAS</label>
-              <div className="flex items-center">
-                <input
-                  required
-                  type="text"
-                  value={formData.subdomain}
-                  onChange={(e) => setFormData({ ...formData, subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500 text-right font-mono"
-                  placeholder="bk-downtown"
-                />
-                <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg text-gray-500 font-mono">
-                  .kepas.com
-                </span>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Domínio do Workspace</label>
+              <input required type="text" value={formData.subdomain} onChange={(e) => setFormData({ ...formData, subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g, '') })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="exemplo.com" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
